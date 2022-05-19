@@ -107,7 +107,7 @@ String dofweek; // day of week
 String myDate; 
 String myTime; 
  
-LiquidCrystal_I2C lcd(0x27, 20, 4);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 Servo servo;
 
 const int angle = 0;
