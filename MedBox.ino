@@ -319,13 +319,14 @@ void loop() {
     DisplayDosageTime();
   }
   if (DosageTime == now.unixtime()) {
+    delay(500);
     SendMessage("Its time to take medicine ");
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Its time to");
     lcd.setCursor(0, 1);
     lcd.print("take medicine");
-
+    delay(3000);
 
     servo.write(0);
     digitalWrite(LED, HIGH); // LED High
@@ -344,12 +345,14 @@ void loop() {
     servo.write(angle);
   }
   if (Reminder1 == now.unixtime() && medicineHasbeenGiven) {
+    delay(500);
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Please take");
     lcd.setCursor(0, 1);
     lcd.print("medicine on time");
     SendMessage("Patient havent taken the medicine ");
+    delay(3000);
     String Logs = "Patient havent taken the medicine " + myDate + " " + myTime;
     delay(3000);
     PatientDosageLog(Logs);
@@ -357,23 +360,28 @@ void loop() {
     SaveAllLogs(Logs);
   }
   if (Reminder2 == now.unixtime() && medicineHasbeenGiven) {
+    delay(500);
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Please take");
     lcd.setCursor(0, 1);
     lcd.print("medicine on time!");
     SendMessage("Patient still havent taken the medicine ");
+    delay(3000);
     String Logs = "Patient still havent taken the medicine " + myDate + " " + myTime;
     PatientDosageLog(Logs);
     SaveAllLogs(Logs);
   }
   if (Reminder3 == now.unixtime() && medicineHasbeenGiven) {
+    delay(500);
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Please take");
     lcd.setCursor(0, 1);
     lcd.print("medicine on time!");
     SendMessage("Dont miss your dose take your medicine now ");
+    
+    delay(3000);
     String Logs = "Dont miss your dose take your medicine now " + myDate + " " + myTime;
     delay(3000);
     PatientDosageLog(Logs);
@@ -381,6 +389,7 @@ void loop() {
     SaveAllLogs(Logs);
   }
   if (MissedDosage == now.unixtime() && medicineHasbeenGiven) {
+    delay(500);
     MissedDose();
     digitalWrite(LED, LOW); // LED LOW
     noTone(buzzer);
@@ -392,6 +401,7 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print("of next dosage");
     SendMessage("Please setup time of next dosage ");
+    delay(3000);
     String Logs = "Please setup time of next dosage " + myDate + " " + myTime;
     delay(3000);
     SaveAllLogs(Logs);
