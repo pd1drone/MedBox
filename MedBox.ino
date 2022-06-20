@@ -837,7 +837,7 @@ void getData() {
           DosageTime = unixTime;
         }
         else {
-          DosageTime = unixTime - 39916800;
+          DosageTime = unixTime;
         }
         Serial.println(DosageTime);
         LCDreminder = DosageTime - 30;
