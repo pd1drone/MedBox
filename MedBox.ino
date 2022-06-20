@@ -188,6 +188,8 @@ int analogHour;
 int analogMin;
 int analogSec;
 int statusSensor;
+
+bool isSendMessage = false;
 // function to convert potentiometer value
 int floatMap(float x, float in_min, float in_max, float out_min, float out_max) {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -254,7 +256,6 @@ void setup() {
   delay(5000);
   servo2.write(angle);
 }
-
 void loop() {
 
   statusSensor = digitalRead(IRSensor);
@@ -271,12 +272,15 @@ void loop() {
   myTime = myTime + Hours + ":" + Minutes + ":" + Secs ;
   SaveSMSLogs();
 
-
-  if (vialsData = 0) {
-    SendMessage("There are no Vials Loaded. Please insert vials and Send Text command that 'N Vials are loaded.'");
-    tone(buzzer);
+  if ((vialsData == 0 && TimeNeededToBeSetup) || !(SD.exists("VIAL_LOG.txt")) ){
+    if (!isSendMessage){
+      SendMessage("There are no Vials Loaded. Please insert vials and Send Text command that 'N Vials are loaded.'");
+      isSendMessage = true;
+    }
+    tone(buzzer,1000);
   }else{
     noTone(buzzer);
+    isSendMessage = false;
   }
 
   // call getData() function if new data has been saved in the sd card
