@@ -162,7 +162,10 @@ bool TimeNeededToBeSetup;
 int _timeout;
 String OutputString;
 String _buffer;
-String number = "+639264562589"; //-> change with your number
+//String number = "+639264562589"; //-> change with your number
+String number1 ="+639209132415";
+String number2 ="+639276985080";
+String number3 ="+639989331841";
 
 String DayNotif;
 String MonthNotif;
@@ -654,9 +657,35 @@ void SendMessage(String in)
   Serial3.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
   delay(1000);
   //Serial.println ("Set SMS Number");
-  Serial3.println("AT+CMGS=\"" + number + "\"\r"); //Mobile phone number to send message
+  Serial3.println("AT+CMGS=\"" + number1 + "\"\r"); //Mobile phone number to send message
   delay(1000);
   String SMS = in + myDate + " " + myTime;
+  Serial3.println(SMS);
+  delay(100);
+  Serial3.println((char)26);// ASCII code of CTRL+Z
+  delay(1000);
+  _buffer = _readSerial();
+
+  delay(1000);
+    //Serial.println ("Sending Message");
+  Serial3.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
+  delay(1000);
+  //Serial.println ("Set SMS Number");
+  Serial3.println("AT+CMGS=\"" + number2 + "\"\r"); //Mobile phone number to send message
+  delay(1000);
+  Serial3.println(SMS);
+  delay(100);
+  Serial3.println((char)26);// ASCII code of CTRL+Z
+  delay(1000);
+  _buffer = _readSerial();
+
+  delay(1000);
+    //Serial.println ("Sending Message");
+  Serial3.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
+  delay(1000);
+  //Serial.println ("Set SMS Number");
+  Serial3.println("AT+CMGS=\"" + number3 + "\"\r"); //Mobile phone number to send message
+  delay(1000);
   Serial3.println(SMS);
   delay(100);
   Serial3.println((char)26);// ASCII code of CTRL+Z
@@ -671,7 +700,7 @@ void MissedDose()
   Serial3.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
   delay(1000);
   //Serial.println ("Set SMS Number");
-  Serial3.println("AT+CMGS=\"" + number + "\"\r"); //Mobile phone number to send message
+  Serial3.println("AT+CMGS=\"" + number1 + "\"\r"); //Mobile phone number to send message
   delay(1000);
   String SMS = "Patient missed the dose of " + myDate + " " + myTime + " medicine";
   Serial3.println(SMS);
@@ -679,7 +708,32 @@ void MissedDose()
   Serial3.println((char)26);// ASCII code of CTRL+Z
   delay(1000);
   _buffer = _readSerial();
-  delay(3000);
+  delay(1000);
+  
+  Serial3.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
+  delay(1000);
+  //Serial.println ("Set SMS Number");
+  Serial3.println("AT+CMGS=\"" + number2 + "\"\r"); //Mobile phone number to send message
+  delay(1000);
+  Serial3.println(SMS);
+  delay(100);
+  Serial3.println((char)26);// ASCII code of CTRL+Z
+  delay(1000);
+  _buffer = _readSerial();
+  delay(1000);
+
+  Serial3.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
+  delay(1000);
+  //Serial.println ("Set SMS Number");
+  Serial3.println("AT+CMGS=\"" + number3 + "\"\r"); //Mobile phone number to send message
+  delay(1000);
+  Serial3.println(SMS);
+  delay(100);
+  Serial3.println((char)26);// ASCII code of CTRL+Z
+  delay(1000);
+  _buffer = _readSerial();
+  delay(1000);
+ 
   PatientDosageLog(SMS);
   delay(3000);
   SaveAllLogs(SMS);
