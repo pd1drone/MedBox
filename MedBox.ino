@@ -904,11 +904,11 @@ void getData() {
           DosageTime = unixTime;
         }
         Serial.println(DosageTime);
-        LCDreminder = DosageTime - 30;
-        Reminder1 = DosageTime + 30;
-        Reminder2 = DosageTime + 60;
-        Reminder3 = DosageTime + 90;
-        MissedDosage = DosageTime + 120;
+        LCDreminder = DosageTime - 300;
+        Reminder1 = DosageTime + 300;
+        Reminder2 = DosageTime + 600;
+        Reminder3 = DosageTime + 900;
+        MissedDosage = DosageTime + 1200;
         print_date_time();
         stamp.getDateTime(DosageTime);
         DisplayDosageTime();
