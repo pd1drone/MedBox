@@ -425,10 +425,13 @@ void loop() {
 
   // if IR Sensor dont detect medecine led low and buzzer off and else led high buzzer on
   if (statusSensor == 0 && medicineHasbeenGiven ) {
+    delay(2000);
     SendMessage("Medicine is taken on ");
     String Logs = "Medicine is taken on " + myDate + " " + myTime;
+    delay(1000);
     PatientDosageLog(Logs);
     SaveAllLogs(Logs);
+    delay(1000);
     digitalWrite(LED, LOW); // LED LOW
     noTone(buzzer);
     isBuzzerHigh = false;
