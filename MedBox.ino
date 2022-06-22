@@ -323,7 +323,7 @@ void loop() {
   }
   if (DosageTime == now.unixtime()) {
     delay(500);
-    servo.write(90);
+    servo.write(0);
     digitalWrite(LED, HIGH); // LED High
     tone(buzzer, 1000);
     isBuzzerHigh = true;
@@ -345,7 +345,7 @@ void loop() {
     UpdatingVialsData(UpdateVialsData);
     delay(3000);
     SaveAllLogs(Logs);
-    servo.write(angle);
+    servo.write(90);
   }
   if (Reminder1 == now.unixtime() && medicineHasbeenGiven) {
     delay(500);
