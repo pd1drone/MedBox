@@ -111,7 +111,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 Servo servo;
 Servo servo2;
 
-const int angle = 120;
+const int angle = 50;
 const int servomotor = 8;
 const int IRSensor = 2; // connect ir sensor to arduino pin 2
 const int LED = 13; // conect Led to arduino pin 13
@@ -161,8 +161,8 @@ bool TimeNeededToBeSetup;
 
 int _timeout;
 String OutputString;
-String _buffer;
-//String number = "+639264562589"; //-> change with your number
+ String _buffer;
+String number = "+639207673036"; //-> change with your number
 String number1 ="+639209132415";
 String number2 ="+639276985080";
 String number3 ="+639989331841";
@@ -255,7 +255,7 @@ void setup() {
     Serial.println("RTC lost power, lets set the time!");
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-  servo2.write(0);
+  servo2.write(150);
   delay(5000);
   servo2.write(angle);
 }
@@ -306,77 +306,70 @@ void loop() {
 
   }
   if (LCDreminder == now.unixtime()) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Medicine will be");
+    lcd.setCursor(0, 1);
+    lcd.print("given in 5 mins");
+    DisplayDosageTime();
     SendMessage("Notification: Medicine will be given after 5 minutes! Please take medicine on time! ");
     String Logs = "Notification: Medicine will be given after 5 minutes! Please take medicine on time! " + myDate + " " + myTime;
     delay(3000);
     PatientDosageLog(Logs);
     delay(3000);
     SaveAllLogs(Logs);
-    delay(3000);
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Medicine will be");
-    lcd.setCursor(0, 1);
-    lcd.print("given in 5 mins");
     delay(10000);
-    DisplayDosageTime();
   }
   if (DosageTime == now.unixtime()) {
-    delay(500);
-    SendMessage("Its time to take medicine ");
+    servo.write(90);
+    digitalWrite(LED, HIGH); // LED High
+    tone(buzzer, 1000);
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Its time to");
     lcd.setCursor(0, 1);
     lcd.print("take medicine");
-    delay(3000);
-
-    servo.write(0);
-    digitalWrite(LED, HIGH); // LED High
-    tone(buzzer, 1000);
+    SendMessage("Its time to take medicine ");
     isBuzzerHigh = true;
     medicineHasbeenGiven = true;
     int NoOfVials = vialsData - 1;
     String UpdateVialsData = String(NoOfVials) + " Vials is loaded";
     String Logs = "Medicine has been given on " + myDate + " " + myTime;
-    delay(3000);
+    delay(1000);
     PatientDosageLog(Logs);
-    delay(3000);
+    delay(1000);
     UpdatingVialsData(UpdateVialsData);
-    delay(3000);
+    delay(1000);
     SaveAllLogs(Logs);
     servo.write(angle);
   }
   if (Reminder1 == now.unixtime() && medicineHasbeenGiven) {
-    delay(500);
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Please take");
     lcd.setCursor(0, 1);
     lcd.print("medicine on time");
     SendMessage("Patient havent taken the medicine ");
-    delay(3000);
+    delay(1000);
     String Logs = "Patient havent taken the medicine " + myDate + " " + myTime;
-    delay(3000);
+    delay(1000);
     PatientDosageLog(Logs);
-    delay(3000);
+    delay(1000);
     SaveAllLogs(Logs);
   }
   if (Reminder2 == now.unixtime() && medicineHasbeenGiven) {
-    delay(500);
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Please take");
     lcd.setCursor(0, 1);
     lcd.print("medicine on time!");
     SendMessage("Patient still havent taken the medicine ");
-    delay(3000);
+    delay(1000);
     String Logs = "Patient still havent taken the medicine " + myDate + " " + myTime;
     PatientDosageLog(Logs);
     SaveAllLogs(Logs);
   }
   if (Reminder3 == now.unixtime() && medicineHasbeenGiven) {
-    delay(500);
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Please take");
@@ -384,18 +377,17 @@ void loop() {
     lcd.print("medicine on time!");
     SendMessage("Dont miss your dose take your medicine now ");
     
-    delay(3000);
+    delay(1000);
     String Logs = "Dont miss your dose take your medicine now " + myDate + " " + myTime;
-    delay(3000);
+    delay(1000);
     PatientDosageLog(Logs);
-    delay(3000);
+    delay(1000);
     SaveAllLogs(Logs);
   }
   if (MissedDosage == now.unixtime() && medicineHasbeenGiven) {
-    delay(500);
-    MissedDose();
     digitalWrite(LED, LOW); // LED LOW
     noTone(buzzer);
+    MissedDose();
     isBuzzerHigh = false;
     medicineHasbeenGiven = false;
     lcd.clear();
@@ -404,9 +396,9 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print("of next dosage");
     SendMessage("Please setup time of next dosage ");
-    delay(3000);
+    delay(1000);
     String Logs = "Please setup time of next dosage " + myDate + " " + myTime;
-    delay(3000);
+    delay(1000);
     SaveAllLogs(Logs);
     TimeNeededToBeSetup = true;
   }
@@ -416,7 +408,7 @@ void loop() {
   // read value if potentiometer
   analogValue = analogRead(A5);
   // Setup Year, Momth, Day, hour, min, sec using potentiometer
-  analogYear = floatMap(analogValue, 0, 1023, 2022, 2099);
+  analogYear = floatMap(analogValue, 0, 1023, 2020, 2099);
   analogMonth = floatMap(analogValue, 0, 1023, 1, 12);
   analogDay = floatMap(analogValue, 0, 1023, 1, 31);
   analogHour = floatMap(analogValue, 0, 1023, 0, 23);
@@ -427,18 +419,19 @@ void loop() {
   if (statusSensor == 0 && medicineHasbeenGiven ) {
     digitalWrite(LED, LOW); // LED LOW
     noTone(buzzer);
-    SendMessage("Medicine is taken on ");
-    String Logs = "Medicine is taken on " + myDate + " " + myTime;
-    PatientDosageLog(Logs);
-    SaveAllLogs(Logs);
-    isBuzzerHigh = false;
-    medicineHasbeenGiven = false;
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Pls setup time");
     lcd.setCursor(0, 1);
     lcd.print("of next dosage!");
     TimeNeededToBeSetup = false;
+    SendMessage("Medicine is taken on ");
+    String Logs = "Medicine is taken on " + myDate + " " + myTime;
+    PatientDosageLog(Logs);
+    SaveAllLogs(Logs);
+    isBuzzerHigh = false;
+    medicineHasbeenGiven = false;
+
   }
   // call PushButton() function
   PushButton();
@@ -487,7 +480,7 @@ void PushButton() {
         while (btnVal == 1) {
           int btnVal = digitalRead(btn);
           int analogValue = analogRead(A5);
-          int analogYear = floatMap(analogValue, 0, 1023, 2022, 2099);
+          int analogYear = floatMap(analogValue, 0, 1023, 2020, 2099);
           lcd.setCursor(4, 1);
           lcd.print(analogYear);
           delay(500);
@@ -691,6 +684,19 @@ void SendMessage(String in)
   Serial3.println((char)26);// ASCII code of CTRL+Z
   delay(1000);
   _buffer = _readSerial();
+  
+  delay(1000);
+    //Serial.println ("Sending Message");
+  Serial3.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
+  delay(1000);
+  //Serial.println ("Set SMS Number");
+  Serial3.println("AT+CMGS=\"" + number + "\"\r"); //Mobile phone number to send message
+  delay(1000);
+  Serial3.println(SMS);
+  delay(100);
+  Serial3.println((char)26);// ASCII code of CTRL+Z
+  delay(1000);
+  _buffer = _readSerial();
 }
 
 //This function will
@@ -726,6 +732,19 @@ void MissedDose()
   delay(1000);
   //Serial.println ("Set SMS Number");
   Serial3.println("AT+CMGS=\"" + number3 + "\"\r"); //Mobile phone number to send message
+  delay(1000);
+  Serial3.println(SMS);
+  delay(100);
+  Serial3.println((char)26);// ASCII code of CTRL+Z
+  delay(1000);
+  _buffer = _readSerial();
+  delay(1000);
+
+  delay(1000);
+  Serial3.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
+  delay(1000);
+  //Serial.println ("Set SMS Number");
+  Serial3.println("AT+CMGS=\"" + number + "\"\r"); //Mobile phone number to send message
   delay(1000);
   Serial3.println(SMS);
   delay(100);
@@ -779,7 +798,7 @@ void SaveSMSLogs() {
         VialsLog = SD.open("VIAL_LOG.txt", FILE_WRITE);
         VialsLog.println(OutputString);
         VialsLog.close();
-        servo2.write(0);
+        servo2.write(150);
         delay(5000);
         servo2.write(angle);
       } else if (OutputString.indexOf("Set medicine") > 0) {
